@@ -1,4 +1,4 @@
-import { ADD_ARTICLE, REMOVE_ARTICLE } from './actions';
+import { ADD_ARTICLE, REMOVE_ARTICLE } from './article.actions';
 
 const articles = (state = {wasAdded: false, text: ''}, action) => {
   switch (action.type) {

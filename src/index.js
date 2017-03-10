@@ -1,18 +1,14 @@
 import React from 'react'
 import {render} from 'react-dom'
-import {createStore} from 'redux'
 import {Provider} from 'react-redux'
-import App from './components/App'
-import reducer from './redux/common/reducers'
+import ArticleForm from './components/home/article-form'
 
-const store = createStore(
-  reducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
+import configureStore from './redux/common/configureStore';
+const store = configureStore();
 
 render(
   <Provider store={store}>
-    <App />
+    <ArticleForm />
   </Provider>,
   document.getElementById('root')
 );

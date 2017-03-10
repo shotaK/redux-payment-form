@@ -1,7 +1,7 @@
 import React, {PropTypes, Component} from 'react';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
-import * as articleActionCreators from '../redux/article/actions';
+import * as articleActionCreators from '../../redux/article/article.actions';
 
 function mapStateToProps(state) {
   return {articles: state.articles};
@@ -19,7 +19,6 @@ export default class App extends Component {
       text: ''
     }
   }
-
 
   handleSubmit = (event) => {
     event.preventDefault();
@@ -45,10 +44,12 @@ export default class App extends Component {
           <input type="submit" value="Submit" />
         </form>
       </div>
-
     )
   }
 }
 
-App.propTypes = {};
+App.propTypes = {
+  articles: PropTypes.object,
+  actions: PropTypes.object,
+};
 

@@ -1,55 +1,27 @@
-import React, {PropTypes, Component} from 'react';
-import { bindActionCreators } from 'redux';
-import {connect} from 'react-redux';
-import * as articleActionCreators from '../../redux/article/article.actions';
+import React, {Component, PropTypes} from 'react';
+import { Field, reduxForm } from 'redux-form';
 
-function mapStateToProps(state) {
-  return {articles: state.articles};
-}
-
-function mapDispatchToProps(dispatch) {
-  return {actions: bindActionCreators(articleActionCreators, dispatch)};
-}
-
-@connect(mapStateToProps, mapDispatchToProps)
-export default class App extends Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      text: ''
-    }
-  }
-
-  handleSubmit = (event) => {
-    event.preventDefault();
-    this.props.actions.addArticle(this.state.text);
-  };
-
-  handleChange = (event) => {
-    this.setState({
-      text: event.target.value,
-    });
-  };
-
+@reduxForm({
+  form: 'article',
+})
+class articleForm extends Component {
   render() {
+    const { handleSubmit } = this.props;
     return (
       <div>
-        {!this.props.articles.wasAdded && <p>Article Not added</p>}
-        {this.props.articles.wasAdded && <p>Article Text: {this.props.articles.text}</p>}
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <label>
             Name:
-            <input type="text" value={this.state.text} onChange={this.handleChange} />
+            <Field name="firstName" component="input" type="text"/>
           </label>
           <input type="submit" value="Submit" />
         </form>
       </div>
-    )
+    );
   }
 }
 
-App.propTypes = {
-  articles: PropTypes.object,
-  actions: PropTypes.object,
-};
+articleForm.propTypes = {};
+articleForm.defaultProps = {};
 
+export default articleForm;

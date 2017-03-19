@@ -10,8 +10,14 @@ class Registration extends Component {
   };
   render() {
     return (
-      <div>
-        <RegistrationForm onSubmit={this.handleSubmit} />
+      <div className="container">
+        <div className="row">
+          <div className="col-lg-6 col-lg-offset-3">
+            <div className="well bs-component">
+              <RegistrationForm onSubmit={this.handleSubmit} />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

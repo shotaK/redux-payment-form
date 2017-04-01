@@ -2,11 +2,11 @@ import React, {
   Component,
   PropTypes,
 } from 'react';
-import {Field, reduxForm} from 'redux-form'
+import {Field, reduxForm, FormSection} from 'redux-form'
 import get from 'lodash.get';
 import has from 'lodash.has';
 
-import creditCardType, { getTypeInfo, types as CardType } from 'credit-card-type';
+import creditCardType, { types as CardType } from 'credit-card-type';
 import visa from '../../assets/images/visa.png';
 import mastercard from '../../assets/images/mastercard.png';
 import americanExpress from '../../assets/images/american_express.png';
@@ -50,6 +50,19 @@ const supportedCards = [
     image: maestro
   }
 ];
+
+const generateNumberArray = (lowEnd, highEnd) => {
+  const list = [];
+  let i;
+  for (i = lowEnd; i <= highEnd; i++) {
+    list.push(i);
+  }
+  return list;
+};
+
+const monthNames = [ "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December" ];
+const expiryYears = generateNumberArray(new Date().getFullYear(), 2031);
 
 const getCardType = (detectedCreditCard) => {
   if (detectedCreditCard.length === 1) {
@@ -104,7 +117,6 @@ const validateCreditCard = (value) => {
 
 const validate = values => {
   const errors = {};
-
   errors.firstName = validateTextField(values.firstName);
   errors.lastName = validateTextField(values.lastName);
   errors.email = validateEmail(values.email);
@@ -114,10 +126,13 @@ const validate = values => {
   errors.zip = validateZip(values.zip);
   errors.city = isRequired(values.city);
   errors.country = isRequired(values.country);
-  errors.country = isRequired(values.country);
   errors['card-number'] = validateCreditCard(values['card-number']);
   errors['name-on-card'] = isRequired(values['name-on-card']);
+  errors['expiry-month'] = isRequired(values['expiry-month']);
+  errors['expiry-year'] = isRequired(values['expiry-year']);
 
+  const detectedCreditCard = creditCardType(values['card-number']);
+  console.log(detectedCreditCard);
   return errors;
 };
 
@@ -127,22 +142,40 @@ const renderCreditCardField = ({input, label, type, meta: {touched, error, warni
   const detectedCreditCard = creditCardType(input.value);
   const cardTypeName = get(getCardType(detectedCreditCard), 'type');
 
-  return (<div className={`form-group ${touched && error && `has-error`}`}>
-    <label htmlFor={label} className="col-lg-3 control-label">{label}</label>
-    <div className="col-lg-7">
-      <input {...input} placeholder={label} type={type} className="form-control" id={label}/>
-      {touched && ((error && <span className="help-block">{error}</span>) || (warning && <span>{warning}</span>))}
-    </div>
-    <div className="col-lg-2">
-      {renderCreditCardPictures(supportedCards, cardTypeName)}
-    </div>
-  </div>)
+  return (
+    <div className={`form-group ${touched && error && `has-error`}`}>
+      <label htmlFor={label} className="col-lg-3 control-label">{label}</label>
+      <div className="col-lg-7">
+        <input {...input} placeholder={label} type={type} className="form-control" id={label}/>
+        {touched && ((error && <span className="help-block">{error}</span>) || (warning && <span>{warning}</span>))}
+      </div>
+      <div className="col-lg-2">
+        {renderCreditCardPictures(supportedCards, cardTypeName)}
+      </div>
+    </div>)
 };
 
-const renderTextFieldFull = ({ input, label, type, meta: { touched, error, warning } }) => (
+const renderDateFieldFull = ({ input, label, type, meta: { touched, error, warning }, options, valueInterceptor } ) => {
+  return (
+    <div className={`form-group ${touched && error && `has-error`}`}>
+      <label htmlFor={label} className="col-lg-3 control-label">{label}</label>
+      <div className="col-lg-3">
+        <select className="form-control" {...input}>
+          <option/>
+          {
+            options.map((option, index) => <option key={index} value={valueInterceptor(index)}>{option}</option>)
+          }
+        </select>
+        {touched && ((error && <span className="help-block">{error}</span>) || (warning && <span>{warning}</span>))}
+      </div>
+    </div>
+  );
+};
+
+const renderTextField = ({ input, label, type, meta: { touched, error, warning }, fieldGridSize }) => (
   <div className={`form-group ${touched && error && `has-error`}`} >
     <label htmlFor={label} className="col-lg-3 control-label">{label}</label>
-    <div className="col-lg-9">
+    <div className={fieldGridSize ? `col-lg-${fieldGridSize}` : 'col-lg-9'}>
       <input {...input} placeholder={label} type={type} className="form-control" id={label}/>
       {touched && ((error && <span className="help-block">{error}</span>) || (warning && <span>{warning}</span>))}
     </div>
@@ -171,22 +204,30 @@ const renderSelectFieldFull = ({ input, label, type, meta: { touched, error, war
 class RegistrationForm extends Component {
   render() {
     const {handleSubmit, pristine, reset, submitting} = this.props;
+    console.log(this.props);
     return (
       <form onSubmit={handleSubmit} className="form-horizontal payment-form">
         <fieldset>
           <legend>Payment Information</legend>
-          <Field name="firstName" type="text" label="First Name" component={renderTextFieldFull} />
-          <Field name="lastName" type="text" label="Last Name" component={renderTextFieldFull} />
-          <Field name="email" type="email" label="Email" component={renderTextFieldFull} />
-          <Field name="address" type="text" label="Address" component={renderTextFieldFull} />
-          <Field name="city" type="text" label="City" component={renderTextFieldFull} />
-          <Field name="state-province" type="text" label="State/Province" component={renderTextFieldFull} />
-          <Field name="zip" type="text" label="Zip" component={renderTextFieldFull} />
-          <Field name="country" type="select" label="Country" component={renderSelectFieldFull} />
+          <FormSection name="userInfo">
+            <Field name="firstName" type="text" label="First Name" component={renderTextField} />
+            <Field name="lastName" type="text" label="Last Name" component={renderTextField} />
+            <Field name="email" type="email" label="Email" component={renderTextField} />
+            <Field name="address" type="text" label="Address" component={renderTextField} />
+            <Field name="city" type="text" label="City" component={renderTextField} />
+            <Field name="stateProvince" type="text" label="State/Province" component={renderTextField} />
+            <Field name="zip" type="text" label="Zip" component={renderTextField} />
+            <Field name="country" type="select" label="Country" component={renderSelectFieldFull} />
+          </FormSection>
           <hr/>
-          <Field name="card-number" type="text" label="Card Number" component={renderCreditCardField}  />
-          <Field name="name-on-card" type="text" label="Name on card" component={renderTextFieldFull} />
-          <Field name="expiry-date" type="text" label="Expiry Date" placeholder="MM/YY" component={renderTextFieldFull} />
+          <FormSection name="payment">
+            <Field name="cardNumber" type="text" label="Card Number" component={renderCreditCardField}  />
+            <Field name="nameOnCard" type="text" label="Name on card" component={renderTextField} />
+            <Field name="expiryMonth" type="text" label="Expiry Month" options={monthNames} valueInterceptor={(index) => index+1} component={renderDateFieldFull} />
+            <Field name="expiryYear" type="text" label="Expiry Year" options={expiryYears} valueInterceptor={(index) => index} component={renderDateFieldFull} />
+            <Field name="securityCode" type="text" label="CCV" fieldGridSize="3" component={renderTextField} />
+          </FormSection>
+
         </fieldset>
       </form>
     );

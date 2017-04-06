@@ -10,4 +10,4 @@ React Redux payment form with advanced credit card and security code detection/v
 ## Demo
 You can see demo here: https://shotak.github.io/redux-payment-form/
 
-To test credit card and security code detection, you can use card numbers from here: https://www.paypalobjects.com/en_US/vhelp/paypalmanager_help/credit_card_numbers.htm 
+To test credit card and security code detection, you can use card numbers from here: https://www.paypalobjects.com/en_US/vhelp/paypalmanager_help/credit_card_numbers.htm or any other source of card numbers. 

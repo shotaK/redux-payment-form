@@ -9,15 +9,16 @@
   "keywords": [
     "redux",
     "redux-form",
-    "example"
+    "example",
+    "react payment form",
+    "credit card payment"
   ],
   "author": "Shota",
   "license": "MIT",
   "dependencies": {
     "credit-card-type": "^5.0.1",
     "html-webpack-plugin": "^2.28.0",
-    "lodash.get": "^4.4.2",
-    "lodash.has": "^4.5.2",
+    "lodash": "^4.17.4",
     "path": "^0.12.7",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",

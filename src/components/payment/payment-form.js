@@ -207,10 +207,10 @@ const renderTextField = ({ input, label, type, meta: { touched, error, warning }
   </div>
 );
 
-const selector = formValueSelector('registration');
+const selector = formValueSelector('payment-form');
 
 @reduxForm({
-  form: 'registration',
+  form: 'payment-form',
   validate
 })
 @connect(

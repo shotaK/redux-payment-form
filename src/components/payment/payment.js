@@ -1,16 +1,16 @@
 import React, {
   Component,
 } from 'react';
-import RegistrationForm from './registration-form';
+import PaymentForm from './payment-form';
 
-class Registration extends Component {
+class Payment extends Component {
   render() {
     return (
-      <div className="container">
+      <div className="container registration">
         <div className="row">
           <div className="col-lg-6 col-lg-offset-3">
             <div className="well bs-component">
-              <RegistrationForm />
+              <PaymentForm />
             </div>
           </div>
         </div>
@@ -19,4 +19,4 @@ class Registration extends Component {
   }
 }
 
-export default Registration;
+export default Payment;

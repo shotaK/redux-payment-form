@@ -1,6 +1,5 @@
 import React, {
   Component,
-  PropTypes,
 } from 'react';
 import {Field, reduxForm, FormSection, formValueSelector} from 'redux-form'
 import get from 'lodash/get';
@@ -208,21 +207,6 @@ const renderTextField = ({ input, label, type, meta: { touched, error, warning }
   </div>
 );
 
-const renderSelectFieldFull = ({ input, label, type, meta: { touched, error, warning } }) => (
-  <div className={`form-group ${touched && error && `has-error`}`}>
-    <label htmlFor={label} className="col-lg-3 control-label">{label}</label>
-    <div className="col-lg-9">
-      <Field name="country" component="select" className="form-control" id={label}>
-        <option value="">Select a country...</option>
-        <option value="USA">USA</option>
-        <option value="Germany">Germany</option>
-        <option value="UK">UK</option>
-      </Field>
-      {touched && ((error && <span className="help-block">{error}</span>) || (warning && <span>{warning}</span>))}
-    </div>
-  </div>
-);
-
 const selector = formValueSelector('registration');
 
 @reduxForm({
@@ -236,7 +220,7 @@ const selector = formValueSelector('registration');
     }
   }
 )
-class RegistrationForm extends Component {
+class PaymentForm extends Component {
   render() {
     const {handleSubmit, cardNumber} = this.props;
     const detectedCreditCard = creditCardType(cardNumber);
@@ -246,17 +230,6 @@ class RegistrationForm extends Component {
       <form onSubmit={handleSubmit} className="form-horizontal payment-form">
         <fieldset>
           <legend>Payment Information</legend>
-          <FormSection name="userInfo">
-            <Field name="firstName" type="text" label="First Name" component={renderTextField} />
-            <Field name="lastName" type="text" label="Last Name" component={renderTextField} />
-            <Field name="email" type="email" label="Email" component={renderTextField} />
-            <Field name="address" type="text" label="Address" component={renderTextField} />
-            <Field name="city" type="text" label="City" component={renderTextField} />
-            <Field name="stateProvince" type="text" label="State/Province" component={renderTextField} />
-            <Field name="zip" type="text" label="Zip" component={renderTextField} />
-            <Field name="country" type="select" label="Country" component={renderSelectFieldFull} />
-          </FormSection>
-          <hr/>
           <FormSection name="payment">
             <Field name="cardNumber" type="text" label="Card Number" component={renderCreditCardField}  />
             <Field name="nameOnCard" type="text" label="Name on card" fieldGridSize="6" component={renderTextField} />
@@ -270,7 +243,7 @@ class RegistrationForm extends Component {
   }
 }
 
-RegistrationForm.propTypes = {};
-RegistrationForm.defaultProps = {};
+PaymentForm.propTypes = {};
+PaymentForm.defaultProps = {};
 
-export default RegistrationForm;
+export default PaymentForm;

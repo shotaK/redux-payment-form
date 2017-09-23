@@ -2,13 +2,13 @@ import React, {
   Component,
   PropTypes,
 } from 'react';
-import Registration from './registration/registration';
+import Payment from './payment/payment';
 
 class App extends Component {
   render() {
     return (
       <div>
-        <Registration />
+        <Payment />
       </div>
     );
   }

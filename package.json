@@ -1,7 +1,7 @@
 {
-  "name": "redux-form-example",
+  "name": "redux-payment-form",
   "version": "1.0.0",
-  "description": "Redux Form Example",
+  "description": "Redux Payment Form",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server"
@@ -11,7 +11,9 @@
     "redux-form",
     "example",
     "react payment form",
-    "credit card payment"
+    "credit card payment",
+    "bank payment",
+    "react visa card"
   ],
   "author": "Shota",
   "license": "MIT",

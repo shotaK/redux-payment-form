@@ -1,6 +1,6 @@
 {
   "name": "redux-payment-form",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Redux Payment Form",
   "main": "./lib/redux-payment-form.js",
   "scripts": {

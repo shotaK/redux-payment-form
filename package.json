@@ -2,9 +2,10 @@
   "name": "redux-payment-form",
   "version": "1.0.1",
   "description": "Redux Payment Form",
-  "main": "index.js",
+  "main": "./lib/redux-payment-form.js",
   "scripts": {
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server --config dev.webpack.js",
+    "build": "webpack --config prod.webpack.js"
   },
   "keywords": [
     "redux",
@@ -17,18 +18,22 @@
   ],
   "author": "Shota",
   "license": "MIT",
+  "homepage": "https://github.com/shotaK/redux-payment-form",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shotaK/redux-payment-form"
+  },
+  "peerDependencies": {
+    "react": "^0.14.0 || ^15.0.0-0 || ^16.0.0-0",
+    "redux": "^2.0.0 || ^3.0.0",
+    "react-redux": "^4.0.0 || ^5.0.0",
+    "react-dom": "^0.14.0 || ^15.0.0-0 || ^16.0.0-0",
+    "redux-form": "^6.0.0 || ^7.0.0"
+  },
   "dependencies": {
     "credit-card-type": "^5.0.1",
-    "html-webpack-plugin": "^2.28.0",
-    "lodash": "^4.17.4",
-    "path": "^0.12.7",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
-    "react-redux": "^5.0.3",
-    "redux": "^3.6.0",
-    "redux-form": "^6.5.0",
-    "webpack": "^2.2.1",
-    "webpack-dev-server": "^2.4.1"
+    "lodash.get": "^4.4.2",
+    "lodash.has": "^4.5.2"
   },
   "devDependencies": {
     "babel-core": "^6.23.1",
@@ -39,10 +44,18 @@
     "babel-preset-stage-2": "^6.22.0",
     "css-loader": "^0.27.3",
     "file-loader": "^0.10.1",
+    "html-webpack-plugin": "^2.28.0",
     "node-sass": "^4.5.0",
+    "path": "^0.12.7",
+    "react": "^15.6.2",
+    "react-dom": "^15.6.2",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2",
+    "redux-form": "^7.0.4",
     "sass-loader": "^6.0.3",
     "style-loader": "^0.13.2",
     "url-loader": "^0.5.8",
-    "webpack": "^2.2.1"
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.4.1"
   }
 }

@@ -1,6 +1,7 @@
 import React, {
   Component,
 } from 'react';
+
 import PaymentForm from './payment-form';
 
 class Payment extends Component {

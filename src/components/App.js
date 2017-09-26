@@ -1,15 +1,19 @@
 import React, {
-  Component,
-  PropTypes,
+  Component
 } from 'react';
+import {Provider} from 'react-redux'
+
 import Payment from './payment/payment';
+import configureStore from '../redux/common/configureStore';
+
+const store = configureStore();
 
 class App extends Component {
   render() {
     return (
-      <div>
+      <Provider store={store}>
         <Payment />
-      </div>
+      </Provider>
     );
   }
 }

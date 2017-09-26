@@ -1,10 +1,8 @@
 .payment {
   margin-top: 25px;
 }
-.payment-form {
-  hr {
-    border-color: #dce4ec;
-  }
+.payment-form hr {
+  border-color: #dce4ec;
 }
 .reg-card-number {
   padding-top: 3px;

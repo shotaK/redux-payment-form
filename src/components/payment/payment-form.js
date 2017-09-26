@@ -1,9 +1,9 @@
 import React, {
   Component,
 } from 'react';
-import {Field, reduxForm, FormSection, formValueSelector} from 'redux-form'
-import get from 'lodash/get';
-import has from 'lodash/has';
+import {Field, reduxForm, FormSection, formValueSelector} from 'redux-form';
+import get from 'lodash.get';
+import has from 'lodash.has';
 import { connect } from 'react-redux';
 
 import creditCardType, { types as CardType } from 'credit-card-type';

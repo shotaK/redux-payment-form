@@ -2,18 +2,37 @@
 
 React Redux payment form with advanced credit card and security code detection/validation (based on [redux-form](http://redux-form.com) library)
 
-## Installation:
-1. ```git clone git@github.com:shotaK/redux-payment-form.git```
-2. ```yarn```
-3. ```npm start```
-
-Please note that while this an npm module, it is not yet importable directly from node_modules into your code, you may clone the code or copy/paste it from the Github repo. 
-
 ## Features
  * Supports the most of credit/debit cards used today (Visa, Mastercard, American Express, Discover and so on)
  * Credit/Debit card detection.
  * Security code (CVV, CDI and so on) detection based on credit card number.
  * Instant validation of the above mentioned fields
+ 
+## Installation:
+```npm install redux-form redux-payment-form --save```
+
+## Usage
+
+```javascript
+import React, { Component } from 'react';
+import PaymentForm from 'redux-payment-form';
+
+class ExampleComp extends Component {
+  render() {
+    return (
+      <div>
+        <PaymentForm />
+      </div>
+    );
+  }
+}
+
+export default ExampleComp;
+```
+
+Optional: the library was designed with Bootstrap 3, but Bootstrap styles are not included, so if you want the form to be styled instantly just import bootstrap styles.
+
+
 
 ## Credit/debit card detection
 ![alt text](http://res.cloudinary.com/shota-karkashadze/image/upload/c_scale,w_500/v1506182406/visa.png)

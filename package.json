@@ -32,8 +32,10 @@
   },
   "dependencies": {
     "credit-card-type": "^5.0.1",
+    "lodash.contains": "^2.4.3",
     "lodash.get": "^4.4.2",
-    "lodash.has": "^4.5.2"
+    "lodash.has": "^4.5.2",
+    "prop-types": "^15.6.0"
   },
   "devDependencies": {
     "babel-core": "^6.23.1",

@@ -1,53 +1,48 @@
 import React, {
   Component,
 } from 'react';
+import PropTypes from 'prop-types';
 import {Field, reduxForm, FormSection, formValueSelector} from 'redux-form';
 import get from 'lodash.get';
 import has from 'lodash.has';
+import contains from 'lodash.contains';
 import { connect } from 'react-redux';
 
 import creditCardType, { types as CardType } from 'credit-card-type';
-import visa from '../../assets/images/visa.png';
-import mastercard from '../../assets/images/mastercard.png';
-import americanExpress from '../../assets/images/american_express.png';
-import dinnersClub from '../../assets/images/dinners_club.png';
-import discover from '../../assets/images/discover.png';
-import jcb from '../../assets/images/jcb.png';
-import unionpay from '../../assets/images/unionpay.png';
-import maestro from '../../assets/images/maestro.png';
+import images from './images';
 
 const supportedCards = [
   {
     name: CardType.VISA,
-    image: visa
+    image: images.visa
   },
   {
     name: CardType.MASTERCARD,
-    image: mastercard
+    image: images['master-card']
   },
   {
     name: CardType.AMERICAN_EXPRESS,
-    image: americanExpress
+    image: images['american-express']
   },
   {
     name: CardType.DINERS_CLUB,
-    image: dinnersClub
+    image: images['diners-club']
   },
   {
     name: CardType.DISCOVER,
-    image: discover
+    image: images['discover']
   },
   {
     name: CardType.JCB,
-    image: jcb
+    image: images['jcb']
   },
   {
     name: CardType.UNIONPAY,
-    image: unionpay
+    image: images['unionpay']
   },
   {
     name: CardType.MAESTRO,
-    image: maestro
+    image: images['maestro']
   }
 ];
 
@@ -64,11 +59,13 @@ const monthNames = [ "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December" ];
 const expiryYears = generateNumberArray(new Date().getFullYear(), 2031);
 
-const getDetectedCard = (detectedCreditCard) => {
-  if (detectedCreditCard.length === 1) {
+const getDetectedCard = (detectedCreditCard, acceptedCards) => {
+  if (detectedCreditCard.length === 1 && isCardSupported(acceptedCards, detectedCreditCard[0].type)) {
     return detectedCreditCard[0]
   }
 };
+
+const isCardSupported = (acceptedCards, cardType) => contains(acceptedCards, cardType);
 
 const isRequired = (value) => {
   if (!value) {
@@ -76,35 +73,11 @@ const isRequired = (value) => {
   }
 };
 
-const validateTextField = value => {
-  if (!value) {
-    return  'Required';
-  } else if (value.length > 15) {
-    return 'Must be 15 characters or less';
-  }
-};
-
-const validateEmail = (value) => {
-  if (!value) {
-    return  'Required';
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-    return 'Invalid email address';
-  }
-};
-
-const validateZip = (value) => {
-  if (!value) {
-    return  'Required';
-  } else if (!/(^\d{5}$)|(^\d{5}-\d{4}$)/.test(value)) {
-    return 'Invalid Zip code';
-  }
-};
-
-const validateCreditCard = (value) => {
+const validateCreditCard = (value, acceptedCards) => {
   if (!value) {
     return 'Required';
   }
-  const detectedCreditCard = getDetectedCard(creditCardType(value));
+  const detectedCreditCard = getDetectedCard(creditCardType(value), acceptedCards);
 
   if (!detectedCreditCard) {
     return 'Please enter a valid credit card number.';
@@ -129,26 +102,15 @@ const validateSecurityCode = (value, securityCodeLength) => {
   }
 };
 
-const validate = values => {
-  const getUserInfoSectionValue = (fieldName) => get(values, `userInfo.${fieldName}`);
+const validate = (values, props) => {
   const getPaymentSectionValue = (fieldName) => get(values, `payment.${fieldName}`);
 
   const detectedCreditCard = creditCardType(getPaymentSectionValue('cardNumber'));
-  const securityCodeLength = get(getDetectedCard(detectedCreditCard), 'code.size');
+  const securityCodeLength = get(getDetectedCard(detectedCreditCard, props.acceptedCards), 'code.size');
 
   return {
-    userInfo: {
-      firstName: validateTextField(getUserInfoSectionValue('firstName')),
-      lastName: validateTextField(getUserInfoSectionValue('lastName')),
-      email: validateEmail(getUserInfoSectionValue('email')),
-      city: isRequired(getUserInfoSectionValue('city')),
-      address: validateEmail(getUserInfoSectionValue('address')),
-      stateProvince: isRequired(getUserInfoSectionValue('stateProvince')),
-      zip : validateZip(getUserInfoSectionValue('zip')),
-      country: isRequired(getUserInfoSectionValue('country'))
-    },
     payment: {
-      cardNumber: validateCreditCard(getPaymentSectionValue('cardNumber')),
+      cardNumber: validateCreditCard(getPaymentSectionValue('cardNumber'), props.acceptedCards),
       nameOnCard: isRequired(getPaymentSectionValue('nameOnCard')),
       expiryMonth: isRequired(getPaymentSectionValue('expiryMonth')),
       expiryYear: isRequired(getPaymentSectionValue('expiryYear')),
@@ -157,10 +119,10 @@ const validate = values => {
   };
 };
 
-const renderCreditCardPictures = (supportedCards, cardTypeName) => supportedCards.map((creditCard, index) => (cardTypeName === creditCard.name && <img key={index} src={creditCard.image} alt={cardTypeName} />));
+const renderCreditCardPictures = (supportedCards, cardTypeName) => supportedCards.map((creditCard, index) => (cardTypeName === creditCard.name && <img key={index} width="40" src={creditCard.image} alt={cardTypeName} />));
 
-const renderCreditCardField = ({input, label, type, meta: {touched, error, warning}}) => {
-  const detectedCreditCard = getDetectedCard(creditCardType(input.value));
+const renderCreditCardField = ({input, label, type, meta: {touched, error, warning}, acceptedCards}) => {
+  const detectedCreditCard = getDetectedCard(creditCardType(input.value), acceptedCards);
   const cardTypeName = get(detectedCreditCard, 'type');
   const cardNiceType = get(detectedCreditCard, 'niceType');
 
@@ -172,7 +134,7 @@ const renderCreditCardField = ({input, label, type, meta: {touched, error, warni
         {touched && ((error && <span className="help-block">{error}</span>) || (warning && <span>{warning}</span>))}
       </div>
       <div className="col-lg-3 reg-card-number">
-        <div className="reg-card-number__content">
+        <div className={`reg-card-number__content ${cardTypeName}`}>
           {renderCreditCardPictures(supportedCards, cardTypeName)}
           <p className="reg-card-number__text">{cardNiceType}</p>
         </div>
@@ -216,22 +178,38 @@ const selector = formValueSelector('payment-form');
 @connect(
   state => {
     return {
-      cardNumber: selector(state, 'payment.cardNumber')
+      payment: {
+        cardNumber: selector(state, 'payment.cardNumber'),
+        nameOnCard: selector(state, 'payment.nameOnCard'),
+        expiryMonth: selector(state, 'payment.expiryMonth'),
+        expiryYear: selector(state, 'payment.expiryYear'),
+        securityCode: selector(state, 'payment.securityCode'),
+      }
     }
   }
 )
 class PaymentForm extends Component {
+
+  componentWillReceiveProps(nextProps) {
+    this.props.onCardChange(
+      {
+        card: nextProps.payment,
+        valid: nextProps.valid,
+      }
+    );
+  }
+
   render() {
-    const {handleSubmit, cardNumber} = this.props;
-    const detectedCreditCard = creditCardType(cardNumber);
-    const securityCodeName = get(getDetectedCard(detectedCreditCard), 'code.name');
+    const {payment, handleSubmit, acceptedCards} = this.props;
+    const detectedCreditCard = creditCardType(payment.cardNumber);
+    const securityCodeName = get(getDetectedCard(detectedCreditCard, acceptedCards), 'code.name');
 
     return (
-      <form onSubmit={handleSubmit} className="form-horizontal payment-form">
+      <form onSubmit={handleSubmit} className="form-horizontal redux-payment-form">
         <fieldset>
           <legend>Payment Information</legend>
           <FormSection name="payment">
-            <Field name="cardNumber" type="text" label="Card Number" component={renderCreditCardField}  />
+            <Field name="cardNumber" type="text" label="Card Number" acceptedCards={acceptedCards} component={renderCreditCardField}  />
             <Field name="nameOnCard" type="text" label="Name on card" fieldGridSize="6" component={renderTextField} />
             <Field name="expiryMonth" type="text" label="Expiry Month" options={monthNames} valueInterceptor={(index) => index+1} component={renderDateFieldFull} />
             <Field name="expiryYear" type="text" label="Expiry Year" options={expiryYears} valueInterceptor={(index) => index} component={renderDateFieldFull} />
@@ -243,7 +221,13 @@ class PaymentForm extends Component {
   }
 }
 
-PaymentForm.propTypes = {};
-PaymentForm.defaultProps = {};
+PaymentForm.propTypes = {
+  onCardChange: PropTypes.func,
+  acceptedCards: PropTypes.array
+};
+PaymentForm.defaultProps = {
+  onCardChange: () => {},
+  acceptedCards: supportedCards.map((card) => card.name)
+};
 
 export default PaymentForm;

@@ -6,6 +6,7 @@ config.entry = './src/components/App.js';
 
 config.output = _.merge(config.output, {
   path: path.resolve('lib'),
+  publicPath: "./",
   filename: 'redux-payment-form.js',
   libraryTarget: 'umd',
   library: 'ReduxPaymentForm'
@@ -45,6 +46,30 @@ config.externals = {
     commonjs: 'redux-form',
     amd: 'redux-form'
   },
+  'lodash.get': {
+    root: 'get',
+    commonjs2: 'lodash.get',
+    commonjs: 'lodash.get',
+    amd: 'lodash.get'
+  },
+  'lodash.has': {
+    root: 'has',
+    commonjs2: 'lodash.has',
+    commonjs: 'lodash.has',
+    amd: 'lodash.has'
+  },
+  'lodash.contains': {
+    root: 'contains',
+    commonjs2: 'lodash.contains',
+    commonjs: 'lodash.contains',
+    amd: 'lodash.contains'
+  },
+  'prop-types': {
+    root: 'PropTypes',
+    commonjs2: 'prop-types',
+    commonjs: 'prop-types',
+    amd: 'prop-types'
+  },
 };
 
 config.module.rules = [
@@ -55,7 +80,7 @@ config.module.rules = [
   },
   {
     test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
-    loader: 'url-loader',
+    loader: 'url-loader?name=./[name].[ext]',
     options: {
       limit: 10000
     }
